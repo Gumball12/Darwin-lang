@@ -235,3 +235,59 @@ lisp에서는 다음과 같이 계산을 진행할 수 있다.
 
 (format t "~d ~%" (mod 5 4)) ; output: 1
 ```
+
+`(/ 5 4)`의 결과가 `5/4`가 된다는 것을 주의하자.
+
+`rem`과 `mod`는 둘 다 나머지 연산이라는 것은 같은데, negative operand에 대해서는 다른 결과를 갖는다. `mod`는 positive한 결과를 갖도록 하고, `rem`은 negative한 결과를 갖는다고 생각하면 되는데, [자세한 것은 SO 참고.](https://stackoverflow.com/questions/13683563/whats-the-difference-between-mod-and-remainder)
+
+### Other different math calculations
+
+```lisp
+(format t "~d ~%" (expt 4 2)) ; output: 16
+
+(format t "~d ~%" (sqrt 81)) ; output: 9
+
+(format t "~d ~%" (exp 1)) ; output: 2.7182817
+
+(format t "~d ~%" (log 1000 10)) ; output: 3
+
+(format t "~d ~%" (equal 'dog 'dog)) ; output: T
+(format t "~d ~%" (equal 10 10)) ; output: T
+(format t "~d ~%" (equal 5.5 5.3)) ; output: Nil
+(format t "~d ~%" (equal "dog" "dog")) ; output: T
+(format t "~d ~%" (equal (list 1 2 3) (list 1 2 3))) ; output: T
+
+(format t "~d ~%" (eq "dog" "dog")) ; output: Nil
+; eq ≠ equal
+
+(format t "~d ~%" (floor 5.5)) ; output: 5
+
+(format t "~d ~%" (ceiling 5.5)) ; output: 6
+
+(format t "~d ~%" (max 5 10)) ; output: 10
+
+(format t "~d ~%" (min 5 10)) ; output: 5
+
+(format t "~d ~%" (oddp 15)) ; output: T
+
+(format t "~d ~%" (evenp 15)) ; output: Nil
+
+(format t "~d ~%" (numberp 2)) ; output: T
+
+(format t "~d ~%" (null null)) ; output: T
+```
+
+* `T`: True
+* `Nil`: False와 비슷한 의미
+* `'dog`: `'`가 붙은 경우, 실행(evaluate)하지 않는 코드를 의미 ([SO](https://stackoverflow.com/a/134908))
+
+이 말고도 `sin`, `cos`, `atan` 뭐 이런 삼각함수도 있다.
+
+#### `eq` and `equal`
+`eq`는 hard check, `equal`은 rough check 라고 생각하면 된다. 다시말해, `eq`의 경우 완전히 같은 object여야만 `T`가 되는 것이고, `equal`은 의미만 같으면 `T`가 되는 것.
+
+대충 이정도만 알고있으면 된다. 자세한 것은 [SO](https://stackoverflow.com/questions/547436/whats-the-difference-between-eq-eql-equal-and-equalp-in-common-lisp) 참고.
+
+---
+
+
