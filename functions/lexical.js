@@ -19,7 +19,9 @@ const tokens = {
   MULT_OP: 23,
   DIV_OP: 24,
   LEFT_PAREN: 25,
-  RIGHT_PAREN: 26
+  RIGHT_PAREN: 26,
+  SEMICOLON: 27,
+  LINE_BREAK: 28
 };
 
 // look-up table
@@ -30,6 +32,9 @@ const lookupTable = {
   '-': tokens.SUB_OP,
   '*': tokens.MULT_OP,
   '/': tokens.DIV_OP,
+  '=': tokens.ASSIGN_OP,
+  ';': tokens.SEMICOLON,
+  '\\': tokens.LINE_BREAK,
   undefined: tokens.EOF
 };
 
@@ -62,7 +67,7 @@ function getChar () {
   states.nextChar = states.code[states.nextCharIndex++];
   const { nextChar } = states;
 
-  if (nextChar !== '\\') { // meaning of '\' is 'EOF'
+  if (nextChar !== '\`') { // meaning of '`' is 'EOF'
     if (isAlpha(nextChar) === true) {
       return types.LETTER;
     } else if (isDigit(nextChar) === true) {
@@ -185,4 +190,5 @@ function isSpace (c) {
 /* run */
 /* --- */
 
-index('(sum + 47) / total\\');
+const code = `const a = 0;\\ff`;
+index(`${code}\``);
