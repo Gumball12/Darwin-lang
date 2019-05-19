@@ -1,48 +1,24 @@
-# PEG
-
-Expression
-	= "(" (empty)* (Argument)* (empty)* Function (empty)* ")"
-
-Argument
-	= (atom)* empty
-    / Expression
-
-Function
-	= letter (atom)*
-
-atom
-	= letter / number
-
-letter
-	= [a-z]
-
-number
-	= [0-9]
-
-empty
-	= [ \t\n\r]
-
 # context-free grammar
 
 Expression
-	= "(" (empty)* (Argument)* (empty)* Function (empty)* ")"
+	= "(" (Data)* ")"
 
-Argument
-  = (atom)* empty
-  | Expression
+Data
+  = (empty)* Expression (empty)*
+  | (empty)* atoms (empty)*
 
-Function
-  = letter (atom)*
+atoms
+  = (letter | number) (atom)*
 
 atom
 	= letter
   | number
-  | empty
 
 letter
 	= "a" | "b" | "c" | "d" | "e" | "f" | "g" | "h" | "i" | "j"
   | "k" | "l" | "m" | "n" | "o" | "p" | "q" | "r" | "s" | "t"
   | "u" | "v" | "w" | "x" | "y" | "z"
+  | "\"" | "\'" | "~" | "," | "!"
 
 number
 	= "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" | "0"
@@ -50,40 +26,58 @@ number
 empty
 	= " " | \t | \n | \r
 
-# attribute grammar
+# type attribute grammar
 # types: excepted_type, actual_type
-# functions: look-up, eval
+# functions: look-up
 
 Expression
-  = "(" (empty)* (Argument)* (empty)* Function (empty)* ")"
-  {Expression.excepted_type = Function.actual_type}
+  = "(" (Data)* ")"
+  {Expression.excepted_type = Data.excepted_type}
 
-Argument
-  = (atom)* empty
-  {Argument.actual_type = look-up((atom)*)}
+Data
+  = (empty)* Expression (empty)*
+  {Data.actual_type = Expression.excepted_type}
 
-Argument
-  = Expression
-  {Argument.actual_type = Expression.excepted_type}
+Data
+  = (empty)* atoms (empty)*
+  {Data.actual_type = look-up(atoms.string)}
 
-Function
-  = (atom)*
-  {Function.actual_type = eval((atom)*).type}
-
-# value grammar
+# value attribute grammar
+# types: value
+# functions: eval, look-up
 
 Expression
-  = "(" (empty)* (Argument)* (empty)* Function (empty)* ")"
-  {Expression.value = eval(Function).value}
+  = "(" (Data)* ")"
+  {Expression.value = eval(Data).value}
 
-Argument
-  = (atom)* empty
-  {Argument.value = (atom)*}
+Data
+  = (empty)* Expression (empty)*
+  {Data.value = Expression.value}
 
-Argument
-  = Expression
-  {Argument.value = Expression.value}
+Data
+  = (empty)* atoms (empty)*
+  {Data.value = look-up(atoms.string)}
 
-Function
-  = (atom)*
-  {Function.value = eval((atom)*).value}
+# PEG
+
+Expression
+	= "(" (Data)* ")"
+
+Data
+	= (empty)* Expression (empty)*
+    / (empty)* atoms (empty)*
+
+atoms
+	= (letter / number) (atom)*
+
+atom
+	= letter / number
+
+letter
+	= [a-zA-Z"'~,!]
+
+number
+	= [0-9]
+
+empty
+	= [ \t\n\r]
