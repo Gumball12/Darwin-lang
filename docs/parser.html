@@ -2,11 +2,24 @@
   <head>
     <meta charset="utf-8">
     <title>parser test</title>
+
+    <style>
+      div {
+        margin-top: 1em;
+      }
+
+      textarea {
+        width: 50%;
+      }
+    </style>
   </head>
 
   <body>
+    <div><textarea id="code" placeholder="insert code" style="height: 200px;"></textarea></div>
+    <div><button id="validation">validation</button></div>
+    <div><textarea id="output" placeholder="result"></textarea></div>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pegjs/0.9.0/peg.min.js"></script>
-    <!--<script src="./parser.js"></script>-->
     <script>
       const parser = PEG.buildParser(`
 Expression
@@ -29,9 +42,20 @@ number
 	= [0-9]
 
 empty
-	= [ \\t\\n\\r]`);
+  = [ \\t\\n\\r]`);
 
-      console.log(parser.parse('a b c'));
+      window.addEventListener('load', () => {
+        document.getElementById('validation').addEventListener('click', () => {
+          const output = document.getElementById('output');
+
+          try {
+            const data = parser.parse(document.getElementById('code').value);
+            output.value = 'parsed successfully';
+          } catch (err) {
+            output.value = err.message;
+          }
+        });
+      });
     </script>
   </body>
 </html>
