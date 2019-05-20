@@ -23,7 +23,7 @@
     <script>
       const parser = PEG.buildParser(`
 Expression
-	= "(" (Data)* ")"
+	= "(" (Data)+ ")"
 
 Data
 	= (empty)* Expression (empty)*
