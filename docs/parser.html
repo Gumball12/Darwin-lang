@@ -23,7 +23,7 @@
     <script>
       const parser = PEG.buildParser(`
 Expression
-	= "(" (Data)* ")"
+	= "(" (Data)+ ")"
 
 Data
 	= (empty)* Expression (empty)*
@@ -36,13 +36,13 @@ atom
 	= letter / number
 
 letter
-	= [a-z"'~,!]
+	= [a-zA-Z"'~,!]
 
 number
 	= [0-9]
 
 empty
-	= [ \t\n\r]`);
+	= [ \\t\\n\\r]`);
 
       window.addEventListener('load', () => {
         document.getElementById('validation').addEventListener('click', () => {
