@@ -10,7 +10,7 @@
                   | ( <expression> <expression> {lt | le | gt | ge} )
                   | ( <expression>* {add | sub | mul} )
                   | ( <expression> <expression> {div | mod} )
-                  | ( <variable> <expression> set )
+                  | ( <variable> <expression> set ) # define and assignment
                   | ( <var_list> <body> lambda )
                   | ( <sequence> print )
                   | ( <operand>* <operator> ) # call function
