@@ -1,83 +1,31 @@
 # context-free grammar
 
-Expression
-	= "(" (Data)* ")"
+<file>        ::= <form>*
+<form>        ::= <expression>
 
-Data
-  = (empty)* Expression (empty)*
-  | (empty)* atoms (empty)*
+<expression>  ::= <constant> | <variable>
+                  | ( <condition>* cond ) # multi true-only condition
+                  | ( <expression>* {and | or | eq} )
+                  | ( <expression> not )
+                  | ( <expression> <expression> {lt | le | gt | ge} )
+                  | ( <expression>* {add | sub | mul} )
+                  | ( <expression> <expression> {div | mod} )
+                  | ( <variable> <expression> set )
+                  | ( <var_list> <body> lambda )
+                  | ( <sequence> print )
+                  | ( <operand>* <operator> ) # call function
 
-atoms
-  = (letter | number) (atom)*
+<condition>   ::= ( <text> <sequence> )
+<variable>    ::= <identifier>
+<var_list>    ::= <variable> | ( <variable>* )
+<body>        ::= <sequence>
 
-atom
-	= letter
-  | number
+<sequence>    ::= <expression>+
+<identifier>  ::= <initial> | <sub_sequent>*
+<operator>    ::= <expression>
+<operand>     ::= <expression>*
+<initial>     ::= <letter>
+<sub_sequent> ::= <initial> | <digit>
 
-letter
-	= "a" | "b" | "c" | "d" | "e" | "f" | "g" | "h" | "i" | "j"
-  | "k" | "l" | "m" | "n" | "o" | "p" | "q" | "r" | "s" | "t"
-  | "u" | "v" | "w" | "x" | "y" | "z"
-  | "\"" | "\'" | "~" | "," | "!"
-
-number
-	= "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9" | "0"
-
-empty
-	= " " | \t | \n | \r
-
-# type attribute grammar
-# types: excepted_type, actual_type
-# functions: look-up
-
-Expression
-  = "(" (Data)* ")"
-  {Expression.excepted_type = Data.excepted_type}
-
-Data
-  = (empty)* Expression (empty)*
-  {Data.actual_type = Expression.excepted_type}
-
-Data
-  = (empty)* atoms (empty)*
-  {Data.actual_type = look-up(atoms.string)}
-
-# value attribute grammar
-# types: value
-# functions: eval, look-up
-
-Expression
-  = "(" (Data)* ")"
-  {Expression.value = eval(Data).value}
-
-Data
-  = (empty)* Expression (empty)*
-  {Data.value = Expression.value}
-
-Data
-  = (empty)* atoms (empty)*
-  {Data.value = look-up(atoms.string)}
-
-# PEG
-
-Expression
-	= "(" (Data)* ")"
-
-Data
-	= (empty)* Expression (empty)*
-    / (empty)* atoms (empty)*
-
-atoms
-	= (letter / number) (atom)*
-
-atom
-	= letter / number
-
-letter
-	= [a-zA-Z"'~,!]
-
-number
-	= [0-9]
-
-empty
-	= [ \t\n\r]
+<letter>      ::= A | ... | Z | a | ... | z
+<digit>       ::= 0 | ... | 9
