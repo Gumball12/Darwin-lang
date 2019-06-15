@@ -88,7 +88,7 @@
         const badge = document.createElement('p');
         badge.innerHTML = [
           '/**',
-          '* 🐟 Darwin language',
+          '* 🐟 고한설 language',
           '* Simplest Lisp-like postfix FPL',
           '* @author Haejun_Seo (<a target="_blank" href="https://github.com/Gumball12/Darwin-lang">github</a>)',
           '* ',
@@ -112,6 +112,30 @@
 
         updateCodeElement(currentCodeElement, code, index);
 
+        const xhr = new XMLHttpRequest();
+        xhr.addEventListener('load', () => {
+          const output = getCodeElement(parent, 'output');
+          output.innerText = JSON.parse(xhr.responseText.replace(/\\"/g, '')).result;
+
+          // init current code element
+          currentCodeElement.classList.remove('active');
+          currentCodeElement = getCodeElement(parent, 'code');
+          currentCodeElement.classList.add('active');
+
+          // scroll to bottom
+          window.scrollTo(0, document.querySelector('p.code.active').offsetTop);
+
+          // history
+          if (code !== '') {
+            history.splice(history.length - 1, 0, code);
+            historyIndex = history.length - 1;
+          }
+
+          // init variables
+          code = '';
+          index = 0;
+        });
+
         // keydown handler
         window.addEventListener('keydown', (evt) => {
           evt.preventDefault();
@@ -128,37 +152,8 @@
             code = code.slice(0, index) + code.slice(index + 1);
           } else if (key === 'Enter') { // invoke code
             // invoke code and append output element
-            const output = getCodeElement(parent, 'output');
-            output.innerHTML = _.flowRight(
-              arr => arr.join(' '),
-              _.partial(_.filter, _, el => el !== undefined),
-              el => {
-                if (el instanceof Array) {
-                  return _.flattenDeep(el);
-                } else {
-                  return [el];
-                }
-              },
-              Darwin
-            )(code);
-
-            // init current code element
-            currentCodeElement.classList.remove('active');
-            currentCodeElement = getCodeElement(parent, 'code');
-            currentCodeElement.classList.add('active');
-
-            // history
-            if (code !== '') {
-              history.splice(history.length - 1, 0, code);
-              historyIndex = history.length - 1;
-            }
-
-            // init variables
-            code = '';
-            index = 0;
-
-            // scroll to bottom
-            window.scrollTo(0, document.querySelector('p.code.active').offsetTop);
+            xhr.open('GET', `https://jszdail1z6.execute-api.us-east-1.amazonaws.com/beta/code?code=${encodeURIComponent(code)}`);
+            xhr.send();
           } else if (key === 'ArrowLeft' && index > 0) { // to left
             index--;
           } else if (key === 'ArrowRight' && index < code.length) { // to right
