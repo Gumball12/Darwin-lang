@@ -90,7 +90,7 @@
         parent.appendChild(badge);
 
         // init variables
-        let code = '(console ((lambda (x) x) "Darwin"))';
+        let code = '(("Darwin" ((x) x lambda)) print)';
         let index = code.length;
         let currentCodeElement = getCodeElement(parent, 'code');
         currentCodeElement.classList.add('active');

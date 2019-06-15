@@ -15,12 +15,12 @@ define(() => {
      */
     lambda (input, context) {
       return (...args) => { // invoke lambda arguments
-        const scope = input[1].reduce((r, x, i) => { // create a new scope (lambda)
+        const scope = input[0].reduce((r, x, i) => { // create a new scope (lambda)
           r[x.value] = args[i];
           return r;
         }, { });
   
-        return interpret(input[2], new Context(scope, context));
+        return interpret(input[1], new Context(scope, context));
       };
     }
   };
@@ -34,7 +34,7 @@ define(() => {
      * 
      * @param {*} input write object
      */
-    console (input) {
+    print (input) {
       console.log(input);
       return input;
     }
@@ -94,13 +94,13 @@ define(() => {
    * @param {Context} context context object
    */
   function interpretList (input, context) {
-    if (input.length > 0 && input[0].value in special) { // if input[0] is the 'special-keyword'
-      return special[input[0].value](input, context);
+    if (input.length > 0 && input[input.length - 1].value in special) { // if input[last] is the 'special-keyword'
+      return special[input[input.length - 1].value](input, context);
     } else {
       const list = input.map(x => interpret(x, context));
   
-      if (list[0] instanceof Function) { // list is an invocation?
-        return list[0].apply(undefined, list.slice(1)); // call the lambda with lambda arguments
+      if (list[list.length - 1] instanceof Function) { // list is an invocation?
+        return list[list.length - 1].apply(undefined, list.slice(0, -1)); // call the lambda with lambda arguments
       } else {
         return list;
       }
