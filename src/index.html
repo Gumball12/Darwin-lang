@@ -3,7 +3,7 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>202144632 서해준 PLT term proj</title>
+    <title>서해준 PLT term proj</title>
 
     <style>
       html, body {
@@ -25,6 +25,7 @@
         margin-left: 10px;
         color: white;
         font-family: monospace;
+        white-space: pre;
       }
 
       p.badge {
@@ -89,8 +90,8 @@
         parent.appendChild(badge);
 
         // init variables
-        let code = '';
-        let index = 0;
+        let code = '(console ((lambda (x) x) "Darwin"))';
+        let index = code.length;
         let currentCodeElement = getCodeElement(parent, 'code');
         currentCodeElement.classList.add('active');
 
