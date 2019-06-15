@@ -72,7 +72,7 @@
   <body>
     <script src="./modules/require.min.js"></script>
     <script>
-      require(['./interpreter.js'], ({ parse, interpret }) => {
+      require(['./Darwin.js'], ({ Darwin }) => {
         // init DOM
         const parent = document.createElement('div');
         parent.classList.add('parent');
@@ -110,7 +110,7 @@
           } else if (key === 'Enter') { // invoke code
             // invoke code and append output element
             const output = getCodeElement(parent, 'output');
-            output.innerHTML = interpret(parse(code));
+            output.innerHTML = Darwin(code);
 
             // init current code element
             currentCodeElement.classList.remove('active');
