@@ -1,5 +1,5 @@
 /**
- * Darwin lang interpreter
+ * 🐟 Darwin lang interpreter
  * 
  * @author HaeJun_Seo
  * @repogitory https://github.com/Gumball12/Darwin-lang
@@ -45,15 +45,24 @@ define(() => {
   
   /**
    * takes a string of code
-   * with regular expressions
+   * using regular expressions
    * 
    * @param {String} input code line
    */
   function tokenize (input) {
-    return input.replace(/\(/g, ' ( ')
-      .replace(/\)/g, ' ) ')
+    return input.split('"')
+      .map((x, i) => {
+        if (i % 2 === 0) { // not string
+          return x.replace(/\(/g, ' ( ')
+            .replace(/\)/g, ' ) ');
+        } else { // string
+          return x.replace(/ /g, '`whitespace`'); // for whitespace in string
+        }
+      })
+      .join('"')
       .trim()
-      .split(/\s+/);
+      .split(/\s+/)
+      .map(x => x.replace(/`whitespace`/g, " "));
   }
   
   /**
@@ -72,7 +81,7 @@ define(() => {
         return list.pop(); // return tokens object
       } else if (token === '(') { // open parenthesize
         list.push(parenthesize(input, [])); // create a new children array
-        return parenthesize(input, list); // 
+        return parenthesize(input, list);
       } else if (token === ')') { // close parenthesize
         return list; // close children array
       } else { // other tokens
@@ -111,6 +120,11 @@ define(() => {
       this.parent = parent;
     }
   
+    /**
+     * get identifier
+     * 
+     * @param {String} identifier 
+     */
     get (identifier) {
       if (identifier in this.scope) { // this scope
         return this.scope[identifier]; // get the identifier in this scope
