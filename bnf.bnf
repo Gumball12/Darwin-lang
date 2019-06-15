@@ -8,11 +8,11 @@
                   | ( <expression>* {and | or | eq} ) # logic operators and equality
                   | ( <expression> not )
                   | ( <expression> <expression> {lt | le | gt | ge} ) # inequality
-                  | ( <expression>* {add | sub | mul} ) # operators
+                  | ( <expression>* {add | mul} ) # operators
+                  | ( <expression> <expression> sub )
                   | ( <expression> <expression> {div | mod} )
                   | ( <variable> <expression> set ) # define and assignment
                   | ( <var_list> <body> lambda ) # lambda expression
-                  | ( <sequence> console ) # write data
                   | ( <operand>* <operator> ) # call function
 
 <condition>   ::= ( <text> <sequence> )
