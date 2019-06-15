@@ -1,3 +1,10 @@
+/**
+ * Darwin lang interpreter
+ * 
+ * @author HaeJun_Seo
+ * @repogitory https://github.com/Gumball12/Darwin-lang
+ */
+
 define(() => {
   /**
    * spacial keywords
