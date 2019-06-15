@@ -92,8 +92,10 @@
           '* Simplest Lisp-like postfix FPL',
           '* @author Haejun_Seo (<a target="_blank" href="https://github.com/Gumball12/Darwin-lang">github</a>)',
           '* ',
+          /*
           '* HELP: help',
           '* EXAMPLES: examples',
+          */
           '*/'
         ].join('<br>');
         badge.classList.add('badge');
@@ -103,8 +105,6 @@
         const history = ['']; // code history
         let historyIndex = 0;
 
-        // let code = '(("Darwin" ((x) x lambda)) print)';
-        // let code = '(func ((x y) (y) lambda) set)';
         let code = '';
         let index = code.length;
         let currentCodeElement = getCodeElement(parent, 'code');
