@@ -39,7 +39,6 @@
         padding: 11px;
         border: 1px solid;
         color: cadetblue;
-        /* text-align: right; */
       }
 
       p.badge.top {
@@ -63,6 +62,8 @@
         animation-name: code-bar-animation;
         animation-iteration-count: infinite;
         animation-direction: alternate;
+        color: red;
+        font-weight: bolder;
       }
 
       @keyframes code-bar-animation {
@@ -75,6 +76,7 @@
   </head>
 
   <body>
+    <script src="./modules/lodash.min.js"></script>
     <script src="./modules/require.min.js"></script>
     <script>
       require(['./Darwin.js'], ({ Darwin }) => {
@@ -98,8 +100,12 @@
         parent.appendChild(badge);
 
         // init variables
+        const history = ['']; // code history
+        let historyIndex = 0;
+
         // let code = '(("Darwin" ((x) x lambda)) print)';
-        let code = '(func ((x y) (y) lambda) set)';
+        // let code = '(func ((x y) (y) lambda) set)';
+        let code = '(recursive ((i) ( (i print) ((i 0 gt) ((i 1 sub) recursive) cond) ((i 0 eq) () cond)) lambda) set)';
         let index = code.length;
         let currentCodeElement = getCodeElement(parent, 'code');
         currentCodeElement.classList.add('active');
@@ -107,7 +113,11 @@
         updateCodeElement(currentCodeElement, code, index);
 
         // keydown handler
-        window.addEventListener('keydown', ({ key }) => {
+        window.addEventListener('keydown', (evt) => {
+          evt.preventDefault();
+
+          const { key } = evt;
+
           if (key.length === 1) { // insert codes
             code = code.slice(0, index) + key + code.slice(index);
             index++;
@@ -119,12 +129,23 @@
           } else if (key === 'Enter') { // invoke code
             // invoke code and append output element
             const output = getCodeElement(parent, 'output');
-            output.innerHTML = Darwin(code);
+            output.innerHTML = _.flowRight(
+              arr => arr.join(' '),
+              _.partial(_.filter, _, el => el !== undefined),
+              _.flattenDeep,
+              Darwin
+            )(code);
 
             // init current code element
             currentCodeElement.classList.remove('active');
             currentCodeElement = getCodeElement(parent, 'code');
             currentCodeElement.classList.add('active');
+
+            // history
+            if (code !== '') {
+              history.splice(history.length - 1, 0, code);
+              historyIndex = history.length - 1;
+            }
 
             // init variables
             code = '';
@@ -136,6 +157,16 @@
             index--;
           } else if (key === 'ArrowRight' && index < code.length) { // to right
             index++;
+          } else if (key === 'ArrowUp' && historyIndex > 0) {
+            code = history[--historyIndex];
+            index = code.length;
+          } else if (key === 'ArrowDown' && historyIndex < history.length - 1) {
+            code = history[++historyIndex];
+            index = code.length;
+          } else if (key === 'End') {
+            index = code.length;
+          } else if (key === 'Home') {
+            index = 0;
           }
 
           updateCodeElement(currentCodeElement, code, index);
