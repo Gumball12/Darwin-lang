@@ -32,8 +32,8 @@
         right: 10px; bottom: 10px;
         padding: 11px;
         border: 1px solid;
-        background: black;
-        text-align: right;
+        color: cadetblue;
+        /* text-align: right; */
       }
 
       p.badge.top {
@@ -79,9 +79,11 @@
 
         const badge = document.createElement('p');
         badge.innerHTML = [
-          '🐟 Darwin language',
-          'Simplest Lisp-like postfix FPL',
-          'author Haejun_Seo (<a href="https://github.com/Gumball12/Darwin-lang">@Gumball12</a>)'
+          '/**',
+          '* 🐟 Darwin language',
+          '* Simplest Lisp-like postfix FPL',
+          '* @author Haejun_Seo (<a target="_blank" href="https://github.com/Gumball12/Darwin-lang">github</a>)',
+          '*/'
         ].join('<br>');
         badge.classList.add('badge');
         parent.appendChild(badge);
