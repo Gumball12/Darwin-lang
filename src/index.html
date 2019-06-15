@@ -1,3 +1,8 @@
+<!--
+  simple web REPL
+  author: HaeJun Seo (@Gumball12)
+-->
+
 <!DOCTYPE html>
 
 <html>
@@ -84,13 +89,17 @@
           '* 🐟 Darwin language',
           '* Simplest Lisp-like postfix FPL',
           '* @author Haejun_Seo (<a target="_blank" href="https://github.com/Gumball12/Darwin-lang">github</a>)',
+          '* ',
+          '* HELP: help',
+          '* EXAMPLES: examples',
           '*/'
         ].join('<br>');
         badge.classList.add('badge');
         parent.appendChild(badge);
 
         // init variables
-        let code = '(("Darwin" ((x) x lambda)) print)';
+        // let code = '(("Darwin" ((x) x lambda)) print)';
+        let code = '(func ((x y) (y) lambda) set)';
         let index = code.length;
         let currentCodeElement = getCodeElement(parent, 'code');
         currentCodeElement.classList.add('active');
@@ -102,7 +111,7 @@
           if (key.length === 1) { // insert codes
             code = code.slice(0, index) + key + code.slice(index);
             index++;
-          } else if (key === 'Backspace') { // backspace
+          } else if (key === 'Backspace' && index > 0) { // backspace
             code = code.slice(0, index - 1) + code.slice(index);
             index--;
           } else if (key === 'Delete') { // delete

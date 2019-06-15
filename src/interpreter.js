@@ -22,6 +22,32 @@ define(() => {
   
         return interpret(input[1], new Context(scope, context));
       };
+    },
+
+    /**
+     * set a variables
+     * 
+     * @param {[Object]} input parsing array
+     * @param {Context} context context
+     */
+    set (input, context) {
+      if (input[1] instanceof Array && input[1][input.length - 1].value === 'lambda') { // lambda
+        const lambda = (...args) => { // invoke lambda args
+          const scope = input[1][0].reduce((r, x, i) => { // create a new lambda scope
+            r[x.value] = args[i];
+            return r;
+          }, { });
+
+          return interpret(input[1][1], new Context(scope, context));
+        };
+
+        context.scope[input[0].value] = lambda;
+
+        return lambda;
+      } else { // literals
+        context.scope[input[0].value] = input[1].value;
+        return input[1].value;
+      }
     }
   };
   
@@ -76,6 +102,7 @@ define(() => {
    * @param {Context} context context object
    */
   function interpret (input, context) {
+    console.log('interpret', input, context);
     if (context === undefined) {
       return interpret(input, new Context(library));
     } else if (input instanceof Array) { // if has parenthesis
@@ -94,6 +121,7 @@ define(() => {
    * @param {Context} context context object
    */
   function interpretList (input, context) {
+    console.log('interpretList', input, context);
     if (input.length > 0 && input[input.length - 1].value in special) { // if input[last] is the 'special-keyword'
       return special[input[input.length - 1].value](input, context);
     } else {
