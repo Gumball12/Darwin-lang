@@ -25,7 +25,7 @@ define(() => {
     },
 
     /**
-     * set a variables
+     * set a variable
      * 
      * @param {[Object]} input parsing array
      * @param {Context} context context
@@ -180,6 +180,7 @@ define(() => {
      * @param {*} b second operand
      */
     div (a, b) {
+      console.log(a, b, a / b);
       return a / b;
     },
 
