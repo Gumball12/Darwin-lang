@@ -27,6 +27,15 @@
       });
       document.body.appendChild(button);
 
+      const btn2 = document.createElement('button');
+      btn2.innerText = 'invoke!';
+      btn2.style = `margin-bottom: 2em;`;
+      btn2.addEventListener('click', () => {
+        const p = parenthesize(tokenize(code.value));
+        console.log(interpret(p));
+      });
+      document.body.appendChild(btn2);
+
       const output = document.createElement('textarea');
       output.style = `display: block; width: 100%; height: 200px;`;
       document.body.appendChild(output);
