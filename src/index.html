@@ -4,41 +4,166 @@
   <head>
     <meta charset="utf-8">
     <title>202144632 서해준 PLT term proj</title>
+
+    <style>
+      html, body {
+        height: 100%;
+        margin: 0;
+      }
+
+      div.parent {
+        height: 100%; width: 100%;
+        background: black;
+        padding: 10px;
+        box-sizing: border-box;
+        word-break: break-all;
+        display: inline-table;
+      }
+
+      p {
+        margin: 0;
+        margin-left: 10px;
+        color: white;
+        font-family: monospace;
+      }
+
+      p.badge {
+        position: fixed;
+        right: 10px; bottom: 10px;
+        padding: 11px;
+        border: 1px solid;
+        background: black;
+        text-align: right;
+      }
+
+      p.badge.top {
+        top: 10px;
+        bottom: inherit;
+      }
+
+      p.code::before {
+        content: '>';
+        margin-right: 10px;
+      }
+
+      p.output::before {
+        content: '>>';
+        margin-right: 10px;
+      }
+
+      p.code.active span.bar::before {
+        content: '|';
+        animation-duration: 0.4s;
+        animation-name: code-bar-animation;
+        animation-iteration-count: infinite;
+        animation-direction: alternate;
+      }
+
+      @keyframes code-bar-animation {
+        1% { opacity: 1; }
+        50% { opacity: 1; }
+        51% { opacity: 0; }
+        100% { opacity: 0; }
+      }
+    </style>
   </head>
 
   <body>
-    <script src="./parser.js"></script>
+    <script src="./modules/require.min.js"></script>
     <script>
-      const code = document.createElement('input');
-      code.style = `display: block; width: 100%; margin-bottom: 2em;`;
-      code.value = '(console ((lambda (x) x) "Lisp"))';
-      document.body.appendChild(code);
+      require(['./parser.js'], ({ parse, interpret }) => {
+        // init DOM
+        const parent = document.createElement('div');
+        parent.classList.add('parent');
+        document.body.appendChild(parent);
 
-      const button = document.createElement('button');
-      button.innerText = 'parse!';
-      button.style = `margin-bottom: 2em;`;
-      button.addEventListener('click', () => {
-        const t = tokenize(code.value);
-        const p = parenthesize(tokenize(code.value));
-        output.innerText = JSON.stringify(p);
-        console.log('input: ', code.value);
-        console.log('tokenization:', t);
-        console.log('parenthesize:', p);
+        const badge = document.createElement('p');
+        badge.innerHTML = [
+          '🐟 Darwin language',
+          'Simplest Lisp-like postfix FPL',
+          'author Haejun_Seo (<a href="https://github.com/Gumball12/Darwin-lang">@Gumball12</a>)'
+        ].join('<br>');
+        badge.classList.add('badge');
+        parent.appendChild(badge);
+
+        // init variables
+        let code = '';
+        let index = 0;
+        let currentCodeElement = getCodeElement(parent, 'code');
+        currentCodeElement.classList.add('active');
+
+        updateCodeElement(currentCodeElement, code, index);
+
+        // keydown handler
+        window.addEventListener('keydown', ({ key }) => {
+          if (key.length === 1) { // insert codes
+            code = code.slice(0, index) + key + code.slice(index);
+            index++;
+          } else if (key === 'Backspace') { // backspace
+            code = code.slice(0, index - 1) + code.slice(index);
+            index--;
+          } else if (key === 'Delete') { // delete
+            code = code.slice(0, index) + code.slice(index + 1);
+          } else if (key === 'Enter') { // invoke code
+            // invoke code and append output element
+            const output = getCodeElement(parent, 'output');
+            output.innerHTML = interpret(parse(code));
+
+            // init current code element
+            currentCodeElement.classList.remove('active');
+            currentCodeElement = getCodeElement(parent, 'code');
+            currentCodeElement.classList.add('active');
+
+            // init variables
+            code = '';
+            index = 0;
+
+            // scroll to bottom
+            window.scrollTo(0, document.querySelector('p.code.active').offsetTop);
+          } else if (key === 'ArrowLeft' && index > 0) { // to left
+            index--;
+          } else if (key === 'ArrowRight' && index < code.length) { // to right
+            index++;
+          }
+
+          updateCodeElement(currentCodeElement, code, index);
+        });
+
+        // scroll handler
+        window.addEventListener('scroll', evt => {
+          if (window.scrollY < 1) {
+            badge.classList.remove('top');
+          } else {
+            badge.classList.add('top');
+          }
+        });
+
+        /* tools */
+
+        /**
+         * get a new code element(p)
+         * 
+         * @param {HTMLElement} parent parent DOM element
+         * @param {String} className css class name
+         */
+        function getCodeElement (parent, className) {
+          const el = document.createElement('p');
+          el.classList.add(className);
+          parent.appendChild(el);
+          return el;
+        }
+
+        /**
+         * update current code element
+         * 
+         * @param {HTMLElement} codeElement current code element
+         * @param {String} code
+         * @param {Number} index
+         */
+        function updateCodeElement (codeElement, code, index) {
+          codeElement.innerHTML = `${code.slice(0, index)}<span class="bar"></span>${code.slice(index)}`;
+        }
       });
-      document.body.appendChild(button);
-
-      const btn2 = document.createElement('button');
-      btn2.innerText = 'invoke!';
-      btn2.style = `margin-bottom: 2em;`;
-      btn2.addEventListener('click', () => {
-        const p = parenthesize(tokenize(code.value));
-        interpret(p);
-      });
-      document.body.appendChild(btn2);
-
-      const output = document.createElement('textarea');
-      output.style = `display: block; width: 100%; height: 200px;`;
-      document.body.appendChild(output);
     </script>
   </body>
 </html>
