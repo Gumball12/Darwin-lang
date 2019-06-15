@@ -11,7 +11,7 @@
     <script>
       const code = document.createElement('input');
       code.style = `display: block; width: 100%; margin-bottom: 2em;`;
-      code.value = '((lambda (x) x) "Lisp")';
+      code.value = '(console ((lambda (x) x) "Lisp"))';
       document.body.appendChild(code);
 
       const button = document.createElement('button');
@@ -32,7 +32,7 @@
       btn2.style = `margin-bottom: 2em;`;
       btn2.addEventListener('click', () => {
         const p = parenthesize(tokenize(code.value));
-        console.log(interpret(p));
+        interpret(p);
       });
       document.body.appendChild(btn2);
 

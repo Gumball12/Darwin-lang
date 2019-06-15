@@ -20,9 +20,20 @@ const special = {
   }
 };
 
+/**
+ * libraries (pre-defined functions)
+ */
 const library = {
-  //
-}
+  /**
+   * object to the console
+   * 
+   * @param {*} input write object
+   */
+  console (input) {
+    console.log(input);
+    return input;
+  }
+};
 
 /**
  * takes a string of code
@@ -136,29 +147,5 @@ function interpretList (input, context) {
     } else {
       return list;
     }
-  }
-}
-
-/* tools */
-
-/**
- * flow function
- * 
- * @param {[Function]} cbs callbacks
- */
-function flow (...cbs) {
-  return (...data) => {
-    for (let i = 0; i < cbs.length; i++) {
-      data = callFunction(cbs[i], data);
-    }
-  };
-}
-
-function callFunction (cb, args) {
-  if (cb instanceof Function) {
-    console.log('>', cb, cb(args));
-    return cb.apply(null, args);
-  } else {
-    console.error('it is not a function');
   }
 }
