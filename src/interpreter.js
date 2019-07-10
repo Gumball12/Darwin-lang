@@ -4,23 +4,23 @@
 
 define(() => {
   /**
-   * spacial keywords
+   * commands
    */
-  const special = {
+  const command = {
     /**
      * lambda expression
      * 
      * @param {[Object]} input parsing array
-     * @param {Context} context context object
+     * @param {Scope} scope scope object
      */
-    lambda (input, context) {
+    lambda (input, scope) {
       return (...args) => { // invoke lambda arguments
-        const scope = input[0].reduce((r, x, i) => { // create a new scope (lambda)
+        const _scope = input[0].reduce((r, x, i) => { // create a new scope (lambda)
           r[x.value] = args[i]; // set variables into the lambda scope
           return r;
         }, { });
   
-        return interpret(input[1], new Context(scope, context)); // invoke function
+        return interpret(input[1], new Scope(_scope, scope)); // invoke function
       }; // return lambda function
     },
 
@@ -28,15 +28,15 @@ define(() => {
      * set a variable
      * 
      * @param {[Object]} input parsing array
-     * @param {Context} context context
+     * @param {Scope} scope scope
      */
-    set (input, context) {
+    set (input, scope) {
       if (input[1] instanceof Array && input[1][input.length - 1].value === 'lambda') { // set lambda
-        context.scope[input[0].value] = special.lambda(input[1], context); // into the context scope
+        scope.scope[input[0].value] = command.lambda(input[1], scope); // into the scope scope
         return '/* lambda */';
       } else { // set literal
         const setValue = input[1].value;
-        context.scope[input[0].value] = setValue; // into the context scope
+        scope.scope[input[0].value] = setValue; // into the scope
         return setValue;
       }
     },
@@ -45,17 +45,17 @@ define(() => {
      * conditional (true-only)
      * 
      * @param {[Object]} input parsing array
-     * @param {Context} context context
+     * @param {Scope} scope scope
      */
-    cond (input, context) {
-      return interpret(input[0], context) ? interpret(input[1], context) : undefined;
+    cond (input, scope) {
+      return interpret(input[0], scope) ? interpret(input[1], scope) : undefined;
     }
   };
   
   /**
-   * libraries (pre-defined functions)
+   * pre-defined functions
    */
-  const library = {
+  const functions = {
     /**
      * object to the console
      * 
@@ -180,7 +180,6 @@ define(() => {
      * @param {*} b second operand
      */
     div (a, b) {
-      console.log(a, b, a / b);
       return a / b;
     },
 
@@ -196,14 +195,14 @@ define(() => {
   };
   
   /**
-   * Context class
+   * Scope class
    */
-  class Context {
+  class Scope {
     /**
      * constructor
      * 
      * @param {*} scope 
-     * @param {Context} parent parent context
+     * @param {Scope} parent parent scope
      */
     constructor (scope, parent) {
       this.scope = scope;
@@ -219,7 +218,7 @@ define(() => {
       if (identifier in this.scope) { // this scope
         return this.scope[identifier]; // get the identifier in this scope
       } else if (this.parent !== undefined) { // has the static-link (static-ancestors)
-        return this.parent.get(identifier); // get the identifier in the parent context
+        return this.parent.get(identifier); // get the identifier in the parent scope
       }
     }
   }
@@ -228,16 +227,15 @@ define(() => {
    * interpretation
    * 
    * @param {Object} input each parsing object
-   * @param {Context} context context object
+   * @param {Scope} scope scope object
    */
-  function interpret (input, context) {
-    console.log('interpret', input, context);
-    if (context === undefined) {
-      return interpret(input, new Context(library));
+  function interpret (input, scope) {
+    if (scope === undefined) {
+      return interpret(input, new Scope(functions));
     } else if (input instanceof Array) { // if has parenthesis
-      return interpretList(input, context);
+      return interpretList(input, scope);
     } else if (input.type === 'identifier') { // if type is identifier
-      return context.get(input.value); // get the identifier from the context object
+      return scope.get(input.value); // get the identifier from the scope object
     } else {
       return input.value; // literal
     }
@@ -247,14 +245,13 @@ define(() => {
    * interpretation (for parsing arrays)
    * 
    * @param {[Object]} input parsing array
-   * @param {Context} context context object
+   * @param {Scope} scope scope object
    */
-  function interpretList (input, context) {
-    console.log('interpretList', input, context);
-    if (input.length > 0 && input[input.length - 1].value in special) { // if input[last] is the 'special-keyword'
-      return special[input[input.length - 1].value](input, context);
+  function interpretList (input, scope) {
+    if (input.length > 0 && input[input.length - 1].value in command) { // if input[last] is the 'command'
+      return command[input[input.length - 1].value](input, scope);
     } else {
-      const list = input.map(x => interpret(x, context));
+      const list = input.map(x => interpret(x, scope));
   
       if (list[list.length - 1] instanceof Function) { // list is an invocation?
         return list[list.length - 1].apply(undefined, list.slice(0, -1)); // call the lambda with lambda arguments
