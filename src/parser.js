@@ -4,7 +4,7 @@
 
 define(() => {
   /**
-   * takes a string of code
+   * takes a strings of code
    * using regular expressions
    * 
    * @param {String} input code line
@@ -12,17 +12,17 @@ define(() => {
   function tokenize (input) {
     return input.split('"')
       .map((x, i) => {
-        if (i % 2 === 0) { // not string
+        if (i % 2 === 0) { // out string
           return x.replace(/\(/g, ' ( ')
             .replace(/\)/g, ' ) ');
-        } else { // string
-          return x.replace(/ /g, '`whitespace`'); // for whitespace in string
+        } else { // in string
+          return x.replace(/ /g, '공백'); // for whitespace in string
         }
       })
       .join('"')
       .trim()
-      .split(/\s+/)
-      .map(x => x.replace(/`whitespace`/g, " "));
+      .split(/\s+/) // split by whitespace
+      .map(x => x.replace(/공백/g, " ")); // replace "공백 to whitespace"
   }
   
   /**
