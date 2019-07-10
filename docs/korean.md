@@ -37,7 +37,7 @@
 * operand: `<주어>`, `<보어>`, `<목적어>`, `<부사어>`
   * 각각은 서로 다른 성격을 띈다.
 
-즉, 프로그래밍 언어에서의 한국어는 postfix라고 할 수 있다.
+즉, 프로그래밍 언어에서의 한국어는 postfix라고 정의할 수가 있다.
 
 # 참고
 [한국어의 어순 in ratsgo's blog](https://ratsgo.github.io/korean%20linguistics/2017/07/14/sov/)
