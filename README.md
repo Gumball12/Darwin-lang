@@ -11,7 +11,7 @@ _Darwin_ is a Simplest Lisp-like Functional Programming Language, used _Postfix_
 
 It looks like _Korean._ not English.
 
-[And you can try this](./src). I implemented web REPL.
+[And you can try this](https://bit.ly/2WCCA56). I implemented web REPL.
 
 ## Features
 
