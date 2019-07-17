@@ -1,5 +1,5 @@
 # Programming Language Darwin 🐟
-_Darwin_ is a Simplest Lisp-like Functional Programming Language, used _Postfix_ notation.
+_Darwin_ is a Simplest Lisp-like Functional Programming Language, use _Postfix_ expression.
 
 ```lisp
 ; in lisp
