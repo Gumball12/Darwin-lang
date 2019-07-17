@@ -43,10 +43,10 @@ require(['./Darwin.js'], ({ Darwin }) => {
       // invoke code and append output element
       const output = getCodeElement(parent, 'output', 'p');
       output.innerHTML = _.flowRight(
-        arr => arr.join(' '),
-        _.partial(_.filter, _, el => el !== undefined),
-        el => el instanceof Array ? _.flattenDeep(el) : [el],
-        Darwin // 🐟
+        arr => arr.join(' '), // array to string
+        _.partial(_.filter, _, el => el !== undefined), // remove undefined
+        el => el instanceof Array ? _.flattenDeep(el) : [el], // to Array
+        Darwin // 🐟 interpretation
       )(code);
 
       // init current code element
