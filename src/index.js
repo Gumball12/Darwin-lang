@@ -4,6 +4,7 @@ require(['./Darwin.js'], ({ Darwin }) => {
   parent.classList.add('parent');
   document.body.appendChild(parent);
 
+  // add badge
   const badge = document.createElement('p');
   badge.innerHTML = [
     '/**',
@@ -24,11 +25,12 @@ require(['./Darwin.js'], ({ Darwin }) => {
   const history = ['']; // code history
   let historyIndex = 0;
 
-  let code = '';
-  let index = code.length;
+  let code = ''; // store inputted code
+  let index = code.length; // input code length
   let currentCodeElement = getCodeElement(parent, 'code');
   currentCodeElement.classList.add('active');
 
+  // init elements
   updateCodeElement(currentCodeElement, code, index);
 
   // keydown handler
@@ -98,7 +100,7 @@ require(['./Darwin.js'], ({ Darwin }) => {
   });
 
   // scroll handler
-  window.addEventListener('scroll', evt => {
+  window.addEventListener('scroll', () => {
     if (window.scrollY < 1) {
       badge.classList.remove('top');
     } else {
