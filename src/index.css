@@ -1,0 +1,78 @@
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+div.parent {
+  height: 100%; width: 100%;
+  background: black;
+  padding: 10px;
+  box-sizing: border-box;
+  word-break: break-all;
+  display: inline-table;
+  position: relative
+}
+
+p {
+  font-size: 3rem;
+  margin: 0;
+  margin-left: 10px;
+  color: white;
+  font-family: monospace;
+  white-space: pre;
+}
+
+p.badge {
+  position: fixed;
+  right: 10px; bottom: 10px;
+  padding: 11px;
+  border: 1px solid;
+  color: cadetblue;
+}
+
+p.badge.top {
+  top: 10px;
+  bottom: inherit;
+}
+
+p.code::before {
+  content: '>';
+  margin-right: 10px;
+}
+p.code.active {
+  background: cadetblue;
+}
+
+p.output::before {
+  content: '>>';
+  margin-right: 10px;
+}
+
+p.code.active span.bar::before {
+  content: '|';
+  animation-duration: 0.4s;
+  animation-name: code-bar-animation;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+  color: red;
+  font-weight: bolder;
+}
+
+/* code bar animation */
+@keyframes code-bar-animation {
+  1% { opacity: 1; }
+  50% { opacity: 1; }
+  51% { opacity: 0; }
+  100% { opacity: 0; }
+}
+
+/* reliative size font */
+@media screen and (min-width: 576px) {
+  html { font-size: 14px; }
+}
+@media screen and (min-width: 992px) {
+  html { font-size: 6px; }
+}
+@media screen and (min-width: 1200px) {
+  html { font-size: 4px; }
+}
