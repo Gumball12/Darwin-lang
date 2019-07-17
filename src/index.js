@@ -9,7 +9,7 @@ require(['./Darwin.js'], ({ Darwin }) => {
     '/**',
     '* 🐟 Darwin language',
     '* Simplest Lisp-like postfix FPL',
-    '* @author Haejun_Seo (<a target="_blank" href="https://github.com/Gumball12/Darwin-lang">github</a>)',
+    '* @author shj (<a target="_blank" href="https://github.com/Gumball12/Darwin-lang">@Gumball12</a>)',
     '* ',
     /*
     '* HELP: help',
