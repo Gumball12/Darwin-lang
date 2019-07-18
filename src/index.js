@@ -44,7 +44,7 @@ require(['./Darwin.js'], ({ Darwin }) => {
       const output = getCodeElement(parent, 'output', 'p');
       output.innerHTML = _.flowRight(
         arr => arr.join(' '), // array to string
-        _.partial(_.filter, _, el => el !== undefined), // remove undefined
+        _.partial(_.map, _, el => el === undefined ? 'undefined' : el), // undefined to string
         el => el instanceof Array ? _.flattenDeep(el) : [el], // to Array
         Darwin // 🐟 interpretation
       )(code);
