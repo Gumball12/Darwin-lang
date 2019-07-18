@@ -9,5 +9,5 @@ define([
   './parser.js',
   './interpreter.js'
 ], ({ parser }, { interpret }) => ({
-  Darwin: input => interpret(parser(input))
+  Darwin: _.flowRight(interpret, parser)
 }));
